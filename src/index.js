@@ -4,7 +4,7 @@ function intersection(set1, set2) {
     //that is the numbers existing in both sets
     const ar1 = Array.from(set1);
     const ar2 = Array.from(set2);
-    let ar3 = [];
+    const ar3 = [];
     ar1.forEach(n => {
         if (ar2.indexOf(n) !== -1) {
             ar3.push(n);
@@ -21,7 +21,7 @@ function sbtract(set1, set2) {
     //set2
     const ar1 = Array.from(set1);
     const ar2 = Array.from(set2);
-    let ar3 = [];
+    const ar3 = [];
     ar1.forEach(n => {
         if (ar2.indexOf(n) === -1) {
             ar3.push(n);
@@ -39,9 +39,9 @@ function getSortedOccurrences(array) {
     //example: the given array is ['lmn', 'ab', 'a', 'cd', 'lmn', 'cd', 'lmn']
     //result: [{str: 'lmn', count: 3}, {str: 'cd', count: 2}, {str: 'a', count:1}, {str: 'ab', count:1}]
     //implementation notes: to use Map<string, number>
-    let occurencyMap = new Map();
+    const occurencyMap = new Map();
     array.forEach(n => occurencyMap.has(n) ? occurencyMap.set(n, occurencyMap.get(n) + 1) : occurencyMap.set(n, 1));
-    let occurrencyArr = [];
+    const occurrencyArr = [];
     occurencyMap.forEach((value, key) => occurrencyArr.push({ str: key, count: value }));
     occurrencyArr.sort((a, b) => a.count - b.count ? b.count - a.count : a.str.localeCompare(b.str));
     return occurrencyArr;
