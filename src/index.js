@@ -1,38 +1,120 @@
-/*****************************************HW #32 */
-function intersection(set1, set2) {
-    //function returning array of common numbers between two sets
-    //that is the numbers existing in both sets
-    return Array.from(set1).filter(Set.prototype.has.bind(set2));
+class Point {
+    constructor(_x, _y) {
+        this._x = _x;
+        this._y = _y;
+        Point.checkValue(_x);
+        Point.checkValue(_y);
+    }
+    static checkValue(value) {
+        if (value < Point.minValue || value > Point.maxValue) {
+            throw `wrong value ${value}, should be in range [${Point.minValue} - ${Point.maxValue}]`;
+        }
+    }
+    get x() {
+        return this._x;
+    }
+    get y() {
+        return this._y;
+    }
+    set x(value) {
+        Point.checkValue(value);
+        this._x = value;
+    }
+    set y(value) {
+        Point.checkValue(value);
+        this._y = value;
+    }
+    draw() {
+        console.log(`Point [x: ${this._x}, y: ${this._y}]`);
+    }
 }
-function sbtract(set1, set2) {
-    //write function returning array of numbers from set1 that don't exist in the 
-    //set2
-    return Array.from(set1).filter(n => !set2.has(n));
+Point.minValue = -100;
+Point.maxValue = 100;
+class Line extends Point {
+    constructor(x, y, _point) {
+        super(x, y);
+        this._point = _point;
+    }
+    draw() {
+        console.log("-----------Line----------");
+        super.draw();
+        this._point.draw();
+        console.log('-'.repeat(20));
+    }
+    get point() {
+        return this._point;
+    }
 }
-function getSortedOccurrences(array) {
-    // function returning array of occurrences 
-    //each occurrency contains a string from the given array and how many times it occures in the array
-    // a result array should be sorted in the descending order of the occurrences and ascending order of the strings
-    //example: the given array is ['lmn', 'ab', 'a', 'cd', 'lmn', 'cd', 'lmn']
-    //result: [{str: 'lmn', count: 3}, {str: 'cd', count: 2}, {str: 'a', count:1}, {str: 'ab', count:1}]
-    //implementation notes: to use Map<string, number>
-    const mapOccurrences = array.reduce((map, str) => {
-        var _a;
-        const count = (_a = map.get(str)) !== null && _a !== void 0 ? _a : 0;
-        map.set(str, count + 1);
-        return map;
-    }, new Map());
-    return Array.from(mapOccurrences)
-        .map(e => ({ str: e[0], count: e[1] }))
-        .sort((o1, o2) => o2.count - o1.count || o1.str.localeCompare(o2.str));
+class Square extends Point {
+    constructor(x, y, _width) {
+        super(x, y);
+        this._width = _width;
+    }
+    get width() {
+        return this._width;
+    }
+    draw() {
+        console.log("--------Square-----------");
+        super.draw();
+        console.log(`width: ${this._width}`);
+        console.log("-".repeat(20));
+    }
 }
-/**************************************************************************** */
-Set.prototype.toString = function () { return Array.from(this).toString(); };
-const set1 = new Set([1, 2, 3, 4, 5]);
-const set2 = new Set([2, 5, 7, -10]);
-console.log(`set1: ${set1}`);
-console.log(`set2: ${set2}`);
-console.log(`intersection(set1, set2)=${intersection(set1, set2)}`);
-console.log(`sbtract(set1, set2) = ${sbtract(set1, set2)}`);
-console.log('__'.repeat(20));
-console.log(getSortedOccurrences(['lmn', 'ab', 'a', 'cd', 'lmn', 'cd', 'lmn']));
+class Rectangle extends Square {
+    constructor(x, y, width, _height) {
+        super(x, y, width);
+        this._height = _height;
+    }
+    draw() {
+        console.log("==========Rectangle=================");
+        super.draw();
+        console.log(`height: ${this._height}`);
+        console.log("=".repeat(20));
+    }
+}
+const shape = new Square(3, 4, 10); //Upper casting
+//way of specific methods call
+// if (shape instanceof Square) {
+//     console.log(shape.width); 
+// }
+/****************demo of setter usage with checking and following exception */
+// const point: Point = new Point(10, 10);
+// point.draw();
+// point.x = 200;
+// point.draw();
+const shapes = [
+    new Line(3, 4, new Point(10, 10)),
+    new Square(2, 5, 10),
+    new Line(20, 30, new Point(3, 4)),
+    new Rectangle(10, 15, 20, 5)
+];
+shapes.forEach(shape => shape.draw());
+/************************************************************HW #33 */
+class Canvas {
+    constructor() {
+        this._shapes = [];
+    }
+    draw() {
+        //TODO write method draw for drawing all shapes in the canvas
+    }
+    addShape(shape) {
+        //TODO write method adding the given shape inside _shapes
+        //returns an index of added shape 
+        return 0;
+    }
+    removeShape(index) {
+        //TODO write method removing a shape at the given index
+        //returns reference to the removed shape
+        return this._shapes[0];
+    }
+    sort() {
+        //TODO write method sorting the shapes in the following order
+        //ascending order of the property x
+        //in the case of equaled x values - descending order of the property y
+    }
+    removeIf(predicate) {
+        //TODO write method removing all the shapes matchin the given predicate function
+        //TODO write function for testing the method removeIf with the following predicate:
+        //remove all lines having the property x of second point greater than the property x of the first point
+    }
+}
