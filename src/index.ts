@@ -1,29 +1,3 @@
-// type Person = {
-//     id: number,
-//     name: string,
-//     address: string
-// }
-// const person1: Person = {id:123, name: 'Moshe', address: 'Lod'};
-// interface IPerson {
-//     id: number;
-//     name: string
-// }
-// const person2: IPerson = {id:124, name: 'Sara', address: 'Lod'};
-// type Employee = Person & {
-//     salary: number
-// }
-// interface IEmployee extends IPerson {
-//     salary: number
-// }
-// const employee1: Employee = {id: 123, name: 'Moshe',salary:10000, address: 'Lod'};
-// const employee2: IEmployee = {id: 124, name: 'Sara',salary:10000, address: 'Lod'};
-// interface IPerson {
-//     address: string
-// }
-// error type can not be redefined
-// type Person = {
-//     address: string;
-// }
 interface Shape {
     draw(): void;
 }
@@ -63,7 +37,7 @@ class Line extends Point {
         super(x, y);
     }
     draw() {
-        console.log("-----------Line----------")
+        console.log("=========Line============")
         super.draw();
         this._point.draw();
         console.log('-'.repeat(20));
@@ -80,7 +54,7 @@ class Square extends Point {
         return this._width;
     }
     draw() {
-        console.log("--------Square-----------");
+        console.log("=========Square==========");
         super.draw();
         console.log(`width: ${this._width}`)
         console.log("-".repeat(20))
@@ -92,54 +66,72 @@ class Rectangle extends Square {
         super(x, y, width);
     }
     draw() {
-        console.log("==========Rectangle=================")
+        console.log("==========Rectangle=========")
         super.draw();
         console.log(`height: ${this._height}`);
         console.log("=".repeat(20))
     }
 }
-const shape:Shape = new Square(3, 4, 10); //Upper casting
-//way of specific methods call
-// if (shape instanceof Square) {
-//     console.log(shape.width); 
-// }
-/****************demo of setter usage with checking and following exception */
-// const point: Point = new Point(10, 10);
-// point.draw();
-// point.x = 200;
-// point.draw();
+class Canvas implements Shape {
+    private _shapes: Shape[] = [];
+    title: String;
+    constructor (shapes, title) {
+        this._shapes = [...shapes];
+        this.title = title;
+    }
+    draw(): void {
+        //TODO write method draw for drawing all shapes in the canvas
+        console.log(`~*~*~*~*~*~*~*~<Canvas "${this.title}">~*~*~*~*~*~*~*~*~`)
+        this._shapes.forEach(shape => shape.draw());
+    }
+    addShape(shape: Shape): number {
+        //TODO write method adding the given shape inside _shapes
+        //returns an index of added shape 
+        this._shapes.push(shape);
+        return this._shapes.indexOf(shape);
+    }
+    removeShape(index: number): Shape {
+        //TODO write method removing a shape at the given index
+        //returns reference to the removed shape
+        const res = this._shapes[index]
+        this._shapes.splice(index,1);
+        return res;
+    }
+    sort(): void {
+        //TODO write method sorting the shapes in the following order
+        //ascending order of the property x
+        //in the case of equaled x values - descending order of the property y
+        this._shapes.sort((a,b)=> a["x"] - b["x"] || b["y"] - a["y"])
+    }
+    removeIf(predicate: (shape: Shape)=>boolean) {
+        //TODO write method removing all the shapes matchin the given predicate function
+        //TODO write function for testing the method removeIf with the following predicate:
+        //remove all lines having the property x of second point greater than the property x of the first point
+        this._shapes = this._shapes.filter(n => !predicate(n) ?? n);
+    }
+    
+}
+/***************************** Testing *********/
 const shapes: Shape[] = [
     new Line(3, 4, new Point(10, 10)),
     new Square(2, 5, 10),
     new Line(20, 30, new Point(3,4)),
     new Rectangle(10, 15, 20, 5)
 ]
-shapes.forEach(shape => shape.draw());
-/************************************************************HW #33 */
-class Canvas implements Shape {
-    private _shapes: Shape[] = []
-    draw(): void {
-        //TODO write method draw for drawing all shapes in the canvas
-    }
-    addShape(shape: Shape): number {
-        //TODO write method adding the given shape inside _shapes
-        //returns an index of added shape 
-        return 0;
-    }
-    removeShape(index: number): Shape {
-        //TODO write method removing a shape at the given index
-        //returns reference to the removed shape
-        return this._shapes[0];
-    }
-    sort(): void {
-        //TODO write method sorting the shapes in the following order
-        //ascending order of the property x
-        //in the case of equaled x values - descending order of the property y
-    }
-    removeIf(predicate: (shape: Shape)=>boolean) {
-        //TODO write method removing all the shapes matchin the given predicate function
-        //TODO write function for testing the method removeIf with the following predicate:
-        //remove all lines having the property x of second point greater than the property x of the first point
-    }
-    
-}
+console.log('---------New Canvas-------');
+const canvas1: Canvas = new Canvas(shapes, "canvas1");
+canvas1.draw();
+console.log('---------Adding New Shapes-------')
+canvas1.addShape(new Rectangle(15, 25, 30, 10));
+canvas1.addShape(new Square(15, 20, 45))
+canvas1.addShape(new Line(65, 89, new Point(98, 10)));
+canvas1.draw();
+console.log('---------Removing Shape Index 1-------')
+canvas1.removeShape(1);
+canvas1.draw();
+console.log('---------Sorting Canvas-------')
+canvas1.sort();
+canvas1.draw();
+console.log('---------Testing RemoveIf -------')
+canvas1.removeIf(n => n["point"] && (n["point"]["_x"] > n["_x"]));
+canvas1.draw();
